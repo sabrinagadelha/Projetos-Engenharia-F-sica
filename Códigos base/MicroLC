@@ -1,0 +1,39 @@
+#include<Arduino.h>
+#include<Wire.h>
+#include<MicroLCD.h>
+#include"DHT.h"
+
+#define dhtPin 3
+#define dhtType DHT11
+
+const int pino = A0;
+int valor;
+float temp, hic, h;
+
+LCD_SSD1306 lcd;
+DHT dht(dhtPin, dhtType);
+
+void setup() {
+  lcd.begin();
+  lcd.setFontSize(FONT_SIZE_MEDIUM);
+  lcd.print("Lendo...");
+  dht.begin();
+  delay(2000);
+}
+
+void loop() {
+  valor = analogRead(pino);
+  temp = dht.readTemperature();
+  h = dht.readHumidity();
+  hic = dht.computeHeatIndex(temp, h, false);
+  lcd.clear();
+  lcd.print("U. Solo: ");
+  lcd.printLong(valor);
+  lcd.println("");
+  lcd.print("U. Ar: ");
+  lcd.printLong(h);
+  lcd.println("");
+  lcd.print("Temp: ");
+  lcd.printLong(hic);
+  delay(2000);
+}
